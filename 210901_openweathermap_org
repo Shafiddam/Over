@@ -1,0 +1,46 @@
+# 3a. Задание можно выполнить на любом языке программирования.
+# Задача: разработать программу, которая на основании данных сервиса https://openweathermap.org/ 
+# (требует регистрации, достаточно бесплатного плана Free) будет выводить следующие данные для Вашего города:
+# 1. День, с минимальной разницей "ощущаемой" и фактической температуры ночью (с указанием разницы в градусах Цельсия)
+# 2. Максимальную продолжительностью светового дня (считать, как разницу между временем заката и рассвета)
+# за ближайшие 5 дней (включая текущий), с указанием даты.
+
+import requests
+import json
+import time
+
+API_KEY = "b702314ab6fb64cab3519c6f2aa8fa23"
+
+long = 49.1221   # долгота Казани
+lati  = 55.7887   # широта Казани
+
+temp_night = []   # список ночных температур
+temp_feels_like_night = []   # список ночных "ощущаемых" температур
+temp_diff = []   # разница температур
+sunrise = []   # список времени восхода
+sunset = []   # список времени заката
+sun_day = []   # список продолжительности светового дня
+
+api_response = requests.get(f"https://api.openweathermap.org/data/2.5/onecall?lat="
+     f"{lati}&lon={long}&exclude=minutely,hourly,alerts&appid={API_KEY}&units=metric").text
+json_response = json.loads(api_response)
+
+for i in range(5):
+    temp_night.append(json_response["daily"][i]["temp"]["night"])
+    temp_diff.append(json_response["daily"][i]["temp"]["night"])
+    temp_feels_like_night.append(json_response["daily"][i]["feels_like"]["night"])
+    temp_diff[i] = abs((temp_night[i]) - (temp_feels_like_night[i]))
+    sunrise.append(json_response["daily"][i]["sunrise"])
+    sun_day.append(json_response["daily"][i]["sunrise"])
+    sunset.append(json_response["daily"][i]["sunset"])
+    sun_day[i] = sunset[i] - sunrise[i]
+
+ind = sun_day.index(max(sun_day)) #находим индекс максимума в списке
+max_sun_day = time.strftime("%H:%M:%S", time.gmtime(max(sun_day)))
+dt = json_response["daily"][ind]["dt"]
+max_sun_day_date = time.strftime("%d.%m.%Y", time.gmtime(dt))
+
+print("1) День, с минимальной разницей 'ощущаемой' и фактической температуры ночью -", min(temp_diff), "градусов Цельсия")
+print("2) Максимальная продолжительность светового дня равна ", max_sun_day, ", дата", max_sun_day_date)
+
+
