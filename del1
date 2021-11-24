@@ -1272,3 +1272,32 @@ for i in range(0, len(letters)):
 
 '''
 
+
+
+'''
+# 4_ЗАГАДКА
+import urllib.request
+import urllib.parse
+# http://www.pythonchallenge.com/pc/def/linkedlist.php  = главная ссылка, там начальная картинка
+link0 = 'http://www.pythonchallenge.com/pc/def/linkedlist.php?nothing'
+b = '=63579'
+
+for a in range(265):
+   #if b == '=16044':
+   #   b = '=8022'
+   with urllib.request.urlopen(link0+b) as resp:
+      link = resp.read().decode(encoding='utf-8') #выбрали в строке только нужное число
+   #if a != 2:
+      b = '=' + link[24:]
+   #else:
+   #   b = '=' + link[76:]
+
+   print(b, a)
+'''
+
+
+
+
+# 5_ЗАГАДКА = http://www.pythonchallenge.com/pc/def/peak.html
+
+
